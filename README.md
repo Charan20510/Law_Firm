@@ -212,8 +212,8 @@ gunicorn legal_portal.wsgi --log-file -
 
 - SECRET_KEY = strong random value
 - DEBUG = False
-- ALLOWED_HOSTS = your-service-name.onrender.com
-- CSRF_TRUSTED_ORIGINS = https://your-service-name.onrender.com
+ - ALLOWED_HOSTS = .onrender.com (or your exact service host)
+ - CSRF_TRUSTED_ORIGINS = https://*.onrender.com (or your exact service origin)
 - DATABASE_URL = your production PostgreSQL connection string
 - DB_SSL_REQUIRE = True
 - EMAIL_BACKEND, EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_USE_TLS, DEFAULT_FROM_EMAIL, AUTOMATION_NOTIFICATION_EMAILS (if you use email features)
