@@ -8,8 +8,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         username = 'admin'
-        email = 'admin@example.com'
-        password = 'ChangeMe123'  # Change this!
+        email = 'admin@gmail.com'
+        password = 'admin@123'  # Change this!
         
         if User.objects.filter(username=username).exists():
             self.stdout.write(
