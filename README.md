@@ -18,8 +18,7 @@ A Django-based legal practice portal for managing clients, advocates, case recor
 - Django 5
 - Gunicorn
 - WhiteNoise
-- PostgreSQL on Render (production)
-- SQLite (local default)
+- PostgreSQL
 
 ## Project Structure
 
@@ -95,6 +94,57 @@ Use these keys in your .env file (local) and Render Environment tab (production)
 - DEFAULT_FROM_EMAIL
 - AUTOMATION_NOTIFICATION_EMAILS
 
+## PostgreSQL Setup (Windows)
+
+PostgreSQL is already connected for local development.
+
+1. Create a DB user in pgAdmin (recommended)
+
+- Open pgAdmin and expand your server.
+- Open Login/Group Roles -> right click -> Create -> Login/Group Role.
+- Name: lawfirm_user
+- Set a password and enable Login.
+
+2. Grant DB privileges
+
+- Open Query Tool and run:
+
+```sql
+GRANT ALL PRIVILEGES ON DATABASE law_firm_db TO lawfirm_user;
+```
+
+3. Set local DATABASE_URL in .env
+
+```env
+DATABASE_URL=postgresql://lawfirm_user:YOUR_PASSWORD@localhost:5432/law_firm_db
+```
+
+4. Install dependencies (includes python-dotenv and psycopg2)
+
+```powershell
+pip install -r requirements.txt
+```
+
+5. Run migrations on PostgreSQL
+
+```powershell
+python manage.py migrate
+```
+
+6. Run server and verify
+
+```powershell
+python manage.py runserver
+```
+
+If the app starts successfully, Django is connected to PostgreSQL.
+
+7. Confirm active database from Django shell (optional)
+
+```powershell
+python manage.py shell -c "from django.conf import settings; print(settings.DATABASES['default'])"
+```
+
 ## Push to GitHub
 
 If starting from this folder:
@@ -113,22 +163,78 @@ If git is already initialized, just push:
 git push -u origin main
 ```
 
-## Deploy to Render
+## Deploy to Render (Manual, No Blueprint)
 
-This project already includes render.yaml and Procfile.
+Use this flow when you want a manual deploy and do not want to use Blueprint.
 
-1. Push code to GitHub.
-2. In Render, click New + and choose Blueprint.
-3. Connect your GitHub repository.
-4. Render will detect render.yaml and create:
-   - web service
-   - PostgreSQL database
-5. Wait for build and deployment.
-6. Open the web service Shell and create admin user:
+1. Push your latest code to GitHub
+
+```powershell
+git add .
+git commit -m "Prepare manual Render deployment"
+git push
+```
+
+2. Create a PostgreSQL database connection for production
+
+- If Render asks for card for managed Postgres, create a free PostgreSQL database on Neon or Supabase.
+- Copy the full connection string with sslmode=require.
+
+3. Create a new Web Service in Render
+
+- Render Dashboard -> New + -> Web Service.
+- Connect your GitHub repository.
+- Branch: main.
+- Runtime: Python 3.
+- Plan: Free (or your preferred plan).
+
+4. Set build and start commands
+
+- Build Command:
+
+```bash
+pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+```
+
+- Start Command:
+
+```bash
+gunicorn legal_portal.wsgi --log-file -
+```
+
+5. Add environment variables in Render
+
+- SECRET_KEY = strong random value
+- DEBUG = False
+- ALLOWED_HOSTS = your-service-name.onrender.com
+- CSRF_TRUSTED_ORIGINS = https://your-service-name.onrender.com
+- DATABASE_URL = your production PostgreSQL connection string
+- EMAIL_BACKEND, EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_USE_TLS, DEFAULT_FROM_EMAIL, AUTOMATION_NOTIFICATION_EMAILS (if you use email features)
+
+6. Create and wait for deployment
+
+- Click Create Web Service.
+- Wait until status becomes Live.
+
+7. Create admin user on Render
+
+- Open your service -> Shell.
+- Run:
 
 ```bash
 python manage.py createsuperuser
 ```
+
+8. Verify the deployment
+
+- Open https://your-service-name.onrender.com
+- Open https://your-service-name.onrender.com/admin
+- Login with your superuser account.
+
+9. Future updates
+
+- Push to main branch.
+- Render auto-deploys the latest commit.
 
 ## Static and Media Notes
 
