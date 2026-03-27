@@ -3,7 +3,7 @@ services:
     name: law-firm
     env: python
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    preDeployCommand: python manage.py migrate --noinput
+    preDeployCommand: python manage.py migrate --noinput && python manage.py create_superuser
     startCommand: gunicorn legal_portal.wsgi --log-file -
     envVars:
       - key: SECRET_KEY
