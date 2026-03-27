@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="mb-4">
+    <h2 class="brand-title h4 mb-1">Role Dashboard</h2>
+    <p class="text-secondary mb-0">Signed in as {{ role|title }}.</p>
+</section>
+
+<section class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="glass-panel rounded-4 p-3 h-100 border-start border-4" style="border-color: #d7a844 !important;">
+            <div class="text-secondary small">Cases</div>
+            <div class="display-6 fw-semibold">{{ cases|length }}</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="glass-panel rounded-4 p-3 h-100 border-start border-4" style="border-color: #0f766e !important;">
+            <div class="text-secondary small">Hearings</div>
+            <div class="display-6 fw-semibold">{{ hearings|length }}</div>
+        </div>
+    </div>
+    {% if role == "client" %}
+    <div class="col-6 col-lg-3">
+        <div class="glass-panel rounded-4 p-3 h-100 border-start border-4" style="border-color: #f97316 !important;">
+            <div class="text-secondary small">Tasks</div>
+            <div class="display-6 fw-semibold">{{ tasks|length }}</div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-6 col-lg-3">
+        <div class="glass-panel rounded-4 p-3 h-100 border-start border-4" style="border-color: #0284c7 !important;">
+            <div class="text-secondary small">Documents</div>
+            <div class="display-6 fw-semibold">{{ documents|length }}</div>
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<section class="row g-4">
+    <div class="col-12 col-xl-6" id="assigned-cases">
+        <div class="glass-panel rounded-4 p-4 h-100">
+            <h3 class="h5 mb-3">Cases</h3>
+            <ul class="list-group list-group-flush">
+                {% for case_item in cases %}
+                    <li class="list-group-item bg-transparent px-0">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+                            <div class="fw-semibold">{{ case_item.case_number }} - {{ case_item.title }}</div>
+                            <div class="d-flex gap-2">
+                                <a class="btn btn-sm btn-outline-primary" href="/case/{{ case_item.id }}/">View</a>
+                                {% if role == "client" %}
+                                    <a class="btn btn-sm btn-outline-warning" href="/case/{{ case_item.id }}/edit/">Update</a>
+                                    <form method="post" action="/case/{{ case_item.id }}/delete/" onsubmit="return confirm('Delete this case?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <small class="text-secondary">{{ case_item.court_name }} | {{ case_item.status|title }}</small>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item bg-transparent px-0 text-secondary">No cases available.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-12 col-xl-6">
+        <div class="glass-panel rounded-4 p-4 h-100">
+            <h3 class="h5 mb-3">Hearings</h3>
+            <ul class="list-group list-group-flush">
+                {% for hearing in hearings %}
+                    <li class="list-group-item bg-transparent px-0 d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="fw-semibold">{{ hearing.case }}</div>
+                            <small class="text-secondary">{{ hearing.hearing_date }}</small>
+                        </div>
+                        <span class="badge text-bg-info text-uppercase">{{ hearing.status }}</span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item bg-transparent px-0 text-secondary">No hearings available.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% if role == "client" %}
+    <div class="col-12 col-xl-6">
+        <div class="glass-panel rounded-4 p-4 h-100">
+            <h3 class="h5 mb-3">Tasks</h3>
+            <ul class="list-group list-group-flush">
+                {% for task in tasks %}
+                    <li class="list-group-item bg-transparent px-0 d-flex justify-content-between align-items-center">
+                        <div class="fw-semibold">{{ task.title }}</div>
+                        <span class="text-secondary small">Due: {{ task.due_date }}</span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item bg-transparent px-0 text-secondary">No tasks available.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 col-xl-6">
+        <div class="glass-panel rounded-4 p-4 h-100">
+            <h3 class="h5 mb-3">Documents</h3>
+            <ul class="list-group list-group-flush">
+                {% for document in documents %}
+                    <li class="list-group-item bg-transparent px-0">
+                        <div class="fw-semibold">{{ document.case.case_number }} - {{ document.document_type|title }}</div>
+                        <small class="text-secondary">Uploaded: {{ document.uploaded_at }}</small>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item bg-transparent px-0 text-secondary">No documents available.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

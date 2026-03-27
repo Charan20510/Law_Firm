@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Merriweather:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lp-bg: #f5f7fb;
+            --lp-paper: #ffffff;
+            --lp-ink: #1f2937;
+            --lp-border: #dbe3ef;
+            --lp-accent: #0f4c81;
+            --lp-muted: #6b7280;
+        }
+
+        body {
+            font-family: "Manrope", sans-serif;
+            color: var(--lp-ink);
+            min-height: 100vh;
+            background: var(--lp-bg);
+        }
+
+        .brand-title {
+            font-family: "Merriweather", serif;
+        }
+
+        .glass-panel {
+            background: var(--lp-paper);
+            border: 1px solid var(--lp-border);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .nav-link {
+            border-radius: 0.55rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            background-color: #e8f0fa;
+            color: var(--lp-accent) !important;
+        }
+
+        form p {
+            margin-bottom: 1rem;
+        }
+
+        form p label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+            color: #1f2937;
+        }
+
+        form input,
+        form select,
+        form textarea {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            background: #ffffff;
+        }
+
+        form input:focus,
+        form select:focus,
+        form textarea:focus {
+            outline: none;
+            border-color: var(--lp-accent);
+            box-shadow: 0 0 0 0.2rem rgba(15, 76, 129, 0.16);
+        }
+
+        .onboarding-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 992px) {
+            .onboarding-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .onboarding-section {
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid #e5e7eb;
+            border-radius: 0.9rem;
+            padding: 1rem;
+        }
+
+        .onboarding-section h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.9rem;
+            color: var(--lp-accent);
+        }
+
+        .form-field {
+            margin-bottom: 0.9rem;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 0.92rem;
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+        }
+
+        .field-error,
+        .errorlist {
+            margin: 0.35rem 0 0;
+            color: #b91c1c;
+            font-size: 0.84rem;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .error-box {
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: #991b1b;
+            border-radius: 0.7rem;
+            padding: 0.75rem 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .onboarding-input[aria-invalid="true"] {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.12);
+        }
+
+        .required-note {
+            color: #6b7280;
+            font-size: 0.86rem;
+        }
+    </style>
+</head>
+<body class="px-3 px-md-4 py-4">
+    <div class="container-xl">
+        <header class="glass-panel rounded-4 p-3 p-md-4 mb-4">
+            <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+                <div>
+                    <h1 class="brand-title h3 mb-1">Legal Case Management</h1>
+                    <p class="mb-0 text-secondary">Practical workspace for clients and advocates</p>
+                </div>
+            </div>
+            <nav class="nav nav-pills gap-2 mt-3">
+                <a class="nav-link text-dark px-3" href="/">Home</a>
+                {% if request.user.is_authenticated %}
+                    {% if request.user.role == 'client' %}
+                        <a class="nav-link text-dark px-3" href="/dashboard/">Dashboard</a>
+                        <a class="nav-link text-dark px-3" href="/case/add/">Add Case</a>
+                        <a class="nav-link text-dark px-3" href="/hearing/add/">Add Hearing</a>
+                        <a class="nav-link text-dark px-3" href="/document/upload/">Documents</a>
+                        <a class="nav-link text-dark px-3" href="/task/add/">Tasks</a>
+                        <a class="nav-link text-dark px-3" href="/logout/">Logout</a>
+                    {% elif request.user.role == 'advocate' %}
+                        <a class="nav-link text-dark px-3" href="/dashboard/">Dashboard</a>
+                        <a class="nav-link text-dark px-3" href="/dashboard/#assigned-cases">Assigned Cases</a>
+                        <a class="nav-link text-dark px-3" href="/hearing/add/">Hearings</a>
+                        <a class="nav-link text-dark px-3" href="/document/upload/">Documents</a>
+                        <a class="nav-link text-dark px-3" href="/logout/">Logout</a>
+                    {% else %}
+                        <a class="nav-link text-dark px-3" href="/select-role/">Select Role</a>
+                        <a class="nav-link text-dark px-3" href="/logout/">Logout</a>
+                    {% endif %}
+                {% else %}
+                    <a class="nav-link text-dark px-3" href="/signup/">Sign Up</a>
+                    <a class="nav-link text-dark px-3" href="/login/">Login</a>
+                {% endif %}
+            </nav>
+        </header>
+
+        <main id="page-content">
+            {% if messages %}
+                <div class="mb-3">
+                    {% for message in messages %}
+                        <div class="alert alert-info mb-2">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script>
+        function markActiveLink() {
+            const path = window.location.pathname;
+            document.querySelectorAll(".nav-link").forEach((link) => {
+                if (link.getAttribute("href") === path) {
+                    link.classList.add("active");
+                }
+            });
+        }
+
+        markActiveLink();
+    </script>
+</body>
+</html>

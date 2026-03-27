@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="glass-panel rounded-4 p-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+        <h2 class="brand-title h4 mb-0">{{ case.case_number }} - {{ case.title }}</h2>
+        <a class="btn btn-primary" href="/case/{{ case.id }}/download-pdf/">Download Case PDF</a>
+    </div>
+    <p class="mb-1"><strong>Court:</strong> {{ case.court_name }}</p>
+    <p class="mb-1"><strong>Case Type:</strong> {{ case.case_type|title }}</p>
+    <p class="mb-1"><strong>Status:</strong> {{ case.status|title }}</p>
+    <p class="mb-1"><strong>Stage:</strong> {{ case.stage|title }}</p>
+    <p class="mb-0"><strong>Description:</strong> {{ case.description }}</p>
+</section>
+{% endblock %}

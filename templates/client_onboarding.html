@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="row justify-content-center">
+    <div class="col-12 col-xl-11">
+        <div class="glass-panel rounded-4 p-4 p-md-5">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2">
+                <div>
+                    <h2 class="brand-title h4 mb-1">Client Onboarding</h2>
+                    <p class="text-secondary mb-0">Complete your profile to continue.</p>
+                </div>
+                <div class="required-note">Fields marked with * are mandatory.</div>
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="error-box">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+
+                <div class="onboarding-grid">
+                    <div class="onboarding-section">
+                        <h3>Basic Details</h3>
+
+                        <div class="form-field">
+                            {{ form.first_name.label_tag }}
+                            {{ form.first_name }}
+                            <div class="field-error">{{ form.first_name.errors }}</div>
+                        </div>
+
+                        <div class="form-field">
+                            {{ form.last_name.label_tag }}
+                            {{ form.last_name }}
+                            <div class="field-error">{{ form.last_name.errors }}</div>
+                        </div>
+
+                        <div class="form-field">
+                            {{ form.father_name.label_tag }}
+                            {{ form.father_name }}
+                            <div class="field-error">{{ form.father_name.errors }}</div>
+                        </div>
+
+                        <div class="form-field">
+                            {{ form.dob.label_tag }}
+                            {{ form.dob }}
+                            <div class="field-error">{{ form.dob.errors }}</div>
+                        </div>
+
+                        <div class="form-field">
+                            {{ form.gender.label_tag }}
+                            {{ form.gender }}
+                            <div class="field-error">{{ form.gender.errors }}</div>
+                        </div>
+                    </div>
+
+                    <div class="onboarding-section">
+                        <h3>Contact Details</h3>
+
+                        <div class="form-field">
+                            {{ form.mobile_number.label_tag }}
+                            {{ form.mobile_number }}
+                            <div class="field-error">{{ form.mobile_number.errors }}</div>
+                        </div>
+
+                        <div class="form-field">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+                            <div class="field-error">{{ form.email.errors }}</div>
+                        </div>
+                    </div>
+
+                    <div class="onboarding-section">
+                        <h3>Identity Details</h3>
+
+                        <div class="form-field">
+                            {{ form.aadhaar.label_tag }}
+                            {{ form.aadhaar }}
+                            <div class="field-error">{{ form.aadhaar.errors }}</div>
+                        </div>
+
+                        <div class="form-field">
+                            {{ form.pan.label_tag }}
+                            {{ form.pan }}
+                            <div class="field-error">{{ form.pan.errors }}</div>
+                        </div>
+                    </div>
+
+                    <div class="onboarding-section">
+                        <h3>Address</h3>
+
+                        <div class="form-field">
+                            {{ form.flat_house_no.label_tag }}
+                            {{ form.flat_house_no }}
+                            <div class="field-error">{{ form.flat_house_no.errors }}</div>
+                        </div>
+
+                        <div class="form-field">
+                            {{ form.area_street.label_tag }}
+                            {{ form.area_street }}
+                            <div class="field-error">{{ form.area_street.errors }}</div>
+                        </div>
+
+                        <div class="form-field">
+                            {{ form.landmark.label_tag }}
+                            {{ form.landmark }}
+                            <div class="field-error">{{ form.landmark.errors }}</div>
+                        </div>
+
+                        <div class="form-field">
+                            {{ form.city.label_tag }}
+                            {{ form.city }}
+                            <div class="field-error">{{ form.city.errors }}</div>
+                        </div>
+
+                        <div class="form-field">
+                            {{ form.state.label_tag }}
+                            {{ form.state }}
+                            <div class="field-error">{{ form.state.errors }}</div>
+                        </div>
+
+                        <div class="form-field">
+                            {{ form.pincode.label_tag }}
+                            {{ form.pincode }}
+                            <div class="field-error">{{ form.pincode.errors }}</div>
+                        </div>
+                    </div>
+
+                    <div class="onboarding-section" style="grid-column: 1 / -1;">
+                        <h3>Uploads</h3>
+                        <div class="row g-3">
+                            <div class="col-12 col-md-4">
+                                <div class="form-field mb-0">
+                                    {{ form.photo.label_tag }}
+                                    {{ form.photo }}
+                                    <div class="field-error">{{ form.photo.errors }}</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="form-field mb-0">
+                                    {{ form.id_proof.label_tag }}
+                                    {{ form.id_proof }}
+                                    <div class="field-error">{{ form.id_proof.errors }}</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="form-field mb-0">
+                                    {{ form.signature.label_tag }}
+                                    {{ form.signature }}
+                                    <div class="field-error">{{ form.signature.errors }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex flex-column flex-sm-row gap-2">
+                    <button type="submit" class="btn btn-warning px-4 fw-semibold">Complete Onboarding</button>
+                    <a href="/dashboard/" class="btn btn-outline-secondary px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
