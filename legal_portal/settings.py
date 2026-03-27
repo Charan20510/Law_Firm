@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -62,13 +63,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'legal_portal.wsgi.application'
 
-DATABASES = {
-    'default': dj_database_url.parse(
-        os.getenv('DATABASE_URL', ''),
-        conn_max_age=600,
-        ssl_require=os.getenv('DB_SSL_REQUIRE', 'False').lower() == 'true',
-    )
-}
+DATABASE_URL = os.getenv('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=os.getenv('DB_SSL_REQUIRE', 'False' if DEBUG else 'True').lower() == 'true',
+        )
+    }
+elif DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    raise ImproperlyConfigured('DATABASE_URL must be set when DEBUG=False.')
 
 AUTH_PASSWORD_VALIDATORS = [
     {
